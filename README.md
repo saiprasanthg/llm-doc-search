@@ -126,7 +126,8 @@ llm-doc-search/
 ### 6.1 Clone / Enter Project
 
 ```bash
-cd /Users/saiprasanthg/Documents/Project/llm-doc-search
+git clone https://github.com/saiprasanthg/llm-doc-search.git
+cd llm-doc-search
 ```
 
 ### 6.2 Create Environment File
