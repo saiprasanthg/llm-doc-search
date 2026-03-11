@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LLM Document Search & Analysis System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
+    <div class="bg-orb orb-c"></div>
+
+    <main class="page">
+      <header class="hero">
+        <div>
+          <span class="eyebrow">RAG PLATFORM</span>
+          <h1>LLM Document Search & Analysis System</h1>
+          <p class="lead">
+            Ingest large document collections, run semantic search, and generate grounded answers
+            with a Retrieval-Augmented Generation pipeline.
+          </p>
+          <div class="tags">
+            <span>Python</span>
+            <span>LangChain</span>
+            <span>FAISS</span>
+            <span>OpenAI</span>
+            <span>Vector Search</span>
+          </div>
+        </div>
+        <div class="status-card">
+          <div class="status-pill" id="status-pill">API: Connecting...</div>
+          <div class="status-meta">
+            <div><span>Index</span><strong id="index-count">0</strong></div>
+            <div><span>Path</span><strong id="index-path">storage/faiss_index</strong></div>
+          </div>
+          <button class="ghost" id="refresh-stats">Refresh Stats</button>
+        </div>
+      </header>
+
+      <section class="flow-section">
+        <div class="flow-card">
+          <div class="card-head">
+            <h2>Pipeline Flow</h2>
+            <p>From raw documents to grounded answers in one continuous loop.</p>
+          </div>
+          <div class="flow-track" id="flow-track">
+            <div class="flow-step" data-step="ingest">
+              <span>Ingest</span>
+              <small>Scan folders</small>
+            </div>
+            <div class="flow-step" data-step="chunk">
+              <span>Chunk</span>
+              <small>Overlap split</small>
+            </div>
+            <div class="flow-step" data-step="embed">
+              <span>Embed</span>
+              <small>Vectorize</small>
+            </div>
+            <div class="flow-step" data-step="index">
+              <span>Index</span>
+              <small>FAISS store</small>
+            </div>
+            <div class="flow-step" data-step="retrieve">
+              <span>Retrieve</span>
+              <small>Top matches</small>
+            </div>
+            <div class="flow-step" data-step="generate">
+              <span>Generate</span>
+              <small>LLM answer</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card" id="ingest-card">
+          <div class="card-head">
+            <h2>Ingest Documents</h2>
+            <p>Load files from a server directory, chunk, embed, and index them.</p>
+          </div>
+          <form id="ingest-form" class="form">
+            <label>
+              Source Directory
+              <input id="source-dir" type="text" placeholder="data" value="data" />
+              <small>Path is read on the server. Use absolute paths if needed.</small>
+            </label>
+            <label>
+              Patterns (optional)
+              <input id="patterns" type="text" placeholder="**/*.txt, **/*.md, **/*.pdf" />
+            </label>
+            <label class="checkbox">
+              <input id="persist" type="checkbox" checked />
+              Persist FAISS index to disk
+            </label>
+            <button type="submit">Run Ingestion</button>
+          </form>
+          <div class="progress-wrap">
+            <div class="progress-bar">
+              <div id="ingest-progress-bar" style="width: 0%"></div>
+            </div>
+            <span id="ingest-progress-text">0%</span>
+          </div>
+          <pre class="output" id="ingest-output">Waiting for ingestion...</pre>
+        </article>
+
+        <article class="card" id="search-card">
+          <div class="card-head">
+            <h2>Semantic Search</h2>
+            <p>Retrieve the most relevant chunks from the index.</p>
+          </div>
+          <form id="search-form" class="form">
+            <label>
+              Query
+              <input id="search-query" type="text" placeholder="How does the ingestion pipeline work?" />
+            </label>
+            <label>
+              Top K
+              <input id="search-topk" type="number" min="1" max="20" value="5" />
+            </label>
+            <button type="submit">Search</button>
+          </form>
+          <div class="result-list" id="search-results">
+            <p class="muted">Search results will appear here.</p>
+          </div>
+        </article>
+
+        <article class="card" id="answer-card">
+          <div class="card-head">
+            <h2>Ask a Question</h2>
+            <p>Generate a context-grounded answer with sources.</p>
+          </div>
+          <form id="answer-form" class="form">
+            <label>
+              Question
+              <input id="answer-query" type="text" placeholder="Summarize the retrieval workflow." />
+            </label>
+            <label>
+              Top K
+              <input id="answer-topk" type="number" min="1" max="20" value="5" />
+            </label>
+            <button type="submit">Generate Answer</button>
+          </form>
+          <div class="answer-box">
+            <h3>Answer</h3>
+            <p id="answer-text">Waiting for a question.</p>
+            <h3>Sources</h3>
+            <ul id="answer-sources" class="source-list"></ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="footnote">
+        <div>
+          <h3>Pipeline Overview</h3>
+          <div class="steps">
+            <span>Ingest</span>
+            <span>Chunk</span>
+            <span>Embed</span>
+            <span>Index</span>
+            <span>Retrieve</span>
+            <span>Generate</span>
+          </div>
+        </div>
+        <p class="muted">
+          Tip: place documents inside the <code>data</code> folder and run ingestion from here.
+        </p>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,8 @@
+Ingestion Pipeline
+
+1) Load documents from a directory (txt, md, pdf).
+2) Split documents into chunks with overlap to preserve context.
+3) Generate embeddings for each chunk using an embedding model.
+4) Store embeddings in a vector database (FAISS) for fast similarity search.
+
+The pipeline supports re-ingesting new documents and appending them to the existing index.
